@@ -1,2 +1,2 @@
-# SpiritAI-Discussion.github.io
+# SpiritAI.github.io
 Homepage of SpiritAI-Discussion-Group, founded by undergraduates from SCUT
