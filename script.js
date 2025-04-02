@@ -52,6 +52,23 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Call once on page load
     updateActiveNavLink();
+    
+    // Add direct click handler for talk cards
+    document.querySelectorAll('.talk-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const parentLink = this.closest('a');
+            if (parentLink && parentLink.href) {
+                window.location.href = parentLink.href;
+            }
+        });
+    });
+    
+    // Make sure talk links don't trigger parent card click
+    document.querySelectorAll('.talk-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
 });
 
 // Add additional styles for scroll animations
