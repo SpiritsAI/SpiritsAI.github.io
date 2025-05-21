@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaperShare - Share Your Favorite AI Papers</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <h1 class="logo"><span class="logo-spirits">Spirits</span><span class="logo-ai">AI</span></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="submit.html">Submit Paper</a></li>
+                        <li><a href="#list">View Submissions</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+
+    <section id="list" class="section-padding">
+        <div class="container">
+            <h2 class="section-title">📃 Shared Papers</h2>
+            <div id="paper-list" class="paper-list-container"></div>
+
+            <script>
+                const sheetId = "1VSLVuXZf1ru4Sr97GXXjHSbktnCp3vw_sUXOck3M5Y4";
+                const sheetName = "Form Responses 1";
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+
+                function formatDate(dateStr) {
+                    // Extract date parts from the string
+                    const match = dateStr.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+                    if (!match) return dateStr;
+                    
+                    const [_, year, month, day] = match;
+                    // Format as YYYY-MM-DD
+                    return `${year}-${String(parseInt(month) + 1).padStart(2, '0')}-${String(parseInt(day)).padStart(2, '0')}`;
+                }
+
+                fetch(url)
+                    .then(res => res.text())
+                    .then(text => {
+                        const json = JSON.parse(text.substr(47).slice(0, -2));
+                        const rows = json.table.rows;
+
+                        const list = document.getElementById("paper-list");
+                        list.innerHTML = "";
+
+                        rows.forEach(row => {
+                            const timestamp = row.c[0] ? formatDate(row.c[0].v) : "";
+                            const title = row.c[1] ? row.c[1].v : "";
+                            const link = row.c[2] ? row.c[2].v : "";
+                            const rate = row.c[3] ? row.c[3].v : "";
+                            const comment = row.c[4] ? row.c[4].v : "";
+                            const topic = row.c[5] ? row.c[5].v : "";
+                            
+                            const paperDiv = document.createElement("div");
+                            paperDiv.className = "talk-card-link";
+                            paperDiv.innerHTML = `
+                                <div class="talk-card">
+                                    <div class="talk-content talk-content-full">
+                                        <h3>${title}</h3>
+                                        <p class="talk-date">${timestamp} |  ${rate} |  ${topic}</p>
+                                        <p class="talk-description">${comment}</p>
+                                        <div class="talk-links">
+                                            <a href="${link}" class="talk-link" target="_blank"><i class="fas fa-external-link-alt"></i> Link</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            list.appendChild(paperDiv);
+                        });
+                    })
+                    .catch(err => {
+                        document.getElementById("paper-list").innerText = "❌ Failed to load, please check if the sheet is publicly shared";
+                        console.error("Loading failed:", err);
+                    });
+            </script>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="copyright">
+                    <p>SpiritsAI &copy; 2025</p>
+                </div>
+                <div class="social-icons">
+                    <a href="https://github.com/SpiritsAI"><i class="fab fa-github"></i></a>
+                    <a href="mailto:spirits.ai@outlook.com"><i class="far fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
