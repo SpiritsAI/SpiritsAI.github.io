@@ -43,8 +43,15 @@
                     if (!match) return dateStr;
                     
                     const [_, year, month, day] = match;
-                    // Format as YYYY-MM-DD
-                    return `${year}-${String(parseInt(month) + 1).padStart(2, '0')}-${String(parseInt(day)).padStart(2, '0')}`;
+                    const months = [
+                        'January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'
+                    ];
+                    const monthName = months[parseInt(month)];
+                    const dayNum = parseInt(day);
+                    
+                    // Format as "Month DD, YYYY"
+                    return `${monthName} ${dayNum}, ${year}`;
                 }
 
                 fetch(url)
@@ -63,6 +70,7 @@
                             const rate = row.c[3] ? row.c[3].v : "";
                             const comment = row.c[4] ? row.c[4].v : "";
                             const topic = row.c[5] ? row.c[5].v : "";
+                            const author = row.c[6] ? row.c[6].v : "";
                             
                             const paperDiv = document.createElement("div");
                             paperDiv.className = "talk-card-link";
@@ -70,7 +78,8 @@
                                 <div class="talk-card">
                                     <div class="talk-content talk-content-full">
                                         <h3>${title}</h3>
-                                        <p class="talk-date">${timestamp} |  ${rate} |  ${topic}</p>
+                                        <p class="talk-date">${timestamp} | ${rate} | ${topic}</p>
+                                        <p class="talk-author">Shared by: ${author}</p>
                                         <p class="talk-description">${comment}</p>
                                         <div class="talk-links">
                                             <a href="${link}" class="talk-link" target="_blank"><i class="fas fa-external-link-alt"></i> Link</a>
